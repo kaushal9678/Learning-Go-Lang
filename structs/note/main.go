@@ -12,28 +12,39 @@ import (
 type saver interface {
 	Save() error
 }
-
+type displayer interface {
+	Display()
+}
+type outputtable interface {
+	saver
+	displayer // or you can directly add Display() method to the interface instead of adding displayer interface
+}
 func main() {
+	printAnything(1)
+	printAnything(123)
+	printAnything(123.45)
+	printAnything(true)
+	printAnything([]string{"apple", "banana", "cherry"})
+	printAnything(map[string]int{"apple": 1, "banana": 2, "cherry": 3})
+	
 	title, content := getNoteData()
 	text := getToDoData()
 	userNote, err := note.New(title, content)
 	userTodo, err := todo.New(text)
 	
-	userNote.Display()
-
-	userTodo.Display()
-
-	err = saveData(userNote)
+	err =  displayData(userNote)
 	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	err = saveData(userTodo)
-	if err != nil {
-		fmt.Println(err)
-		return
+		return 
 	}
 	
+	err = displayData(userTodo)
+	if err != nil {
+		return 
+	}
+	
+}
+func printAnything(data interface{}) {// here interface{} means you can pass any type of data to the function like object in Javascript} 
+	fmt.Println(data)
 }
 
 func saveData(data saver) error {
@@ -44,6 +55,11 @@ func saveData(data saver) error {
 	}
 	fmt.Println("Note saved successfully")
 	return nil
+}
+func displayData(data outputtable) error {
+	data.Display()
+	return saveData(data)
+	
 }
 func getNoteData() (string, string) {
 	title := getUserInput("Note title:")
