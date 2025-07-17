@@ -44,7 +44,43 @@ func main() {
 	
 }
 func printAnything(data interface{}) {// here interface{} means you can pass any type of data to the function like object in Javascript} 
-	fmt.Println(data)
+	// like in javascript we have typeof here we have switch
+	switch data.(type) {
+	case int:
+		fmt.Printf("int %v\n", data)
+	case string:
+		fmt.Printf("int %v\n", data)
+	case float64:
+		fmt.Printf("float64 %v\n", data)
+	case bool:
+		fmt.Printf("bool %v\n", data)
+	case []string:
+		fmt.Printf("[]string %v\n", data)
+	case map[string]int:
+		fmt.Printf("map[string]int %v\n", data)
+	default:
+		fmt.Printf("unknown type %T\n", data)
+	}
+
+}
+func printAnythingUsingSecondApproach(data interface{}) {
+	intVal, ok := data.(int)
+	if ok {
+		fmt.Printf("int %v\n", intVal)
+	}
+	stringVal, ok := data.(string)
+	if ok {
+		fmt.Printf("string %v\n", stringVal)
+	}
+	floatVal, ok := data.(float64)
+	if ok {
+		fmt.Printf("float64 %v\n", floatVal)
+	}
+	boolVal, ok := data.(bool)
+	if ok {
+		fmt.Printf("bool %v\n", boolVal)
+	}
+	
 }
 
 func saveData(data saver) error {
