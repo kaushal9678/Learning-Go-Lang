@@ -12,12 +12,12 @@ type Event struct{
 	Location string `json:"location" binding:"required"`
 	DateTime time.Time `json:"date" binding:"required"`
 	Description string `json:"description" binding:"required"`
-	UserID int `json:"user_id"`
+	UserID int64 `json:"user_id"`
 }
 
 var events = []Event{}
-func (e Event) Save() error{
-	events = append(events, e)
+func (e *Event) Save() error{
+	//events = append(events, &e)
 	query := `INSERT INTO events (name, location, date, description, user_id) VALUES (?, ?, ?, ?, ?)`
 	stmt, err := db.DB.Prepare(query)
 	if(err != nil) {

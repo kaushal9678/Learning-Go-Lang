@@ -53,17 +53,17 @@ func GetUsers() ([]User, error) {
 return users, nil
 }
 
-func (u User) ValidateCredentials() error{
-	query := `SELECT password FROM users WHERE email = ?`;
+func (u *User) ValidateCredentials() error{
+	query := `SELECT id, password FROM users WHERE email = ?`;
 	row := db.DB.QueryRow(query, u.Email);
 	
 	var retrievedPassword string;
-	if err := row.Scan(&retrievedPassword); err != nil {
+	if err := row.Scan(&u.ID, &retrievedPassword); err != nil {
 		return err;
 	}
 	passwordIsValid := utils.CheckPasswordHash(u.Password, retrievedPassword)
 	if !passwordIsValid {
-		return errors.New("Credentials are not valid")
+		return errors.New("credentials are not valid")
 	}
 
 	return nil

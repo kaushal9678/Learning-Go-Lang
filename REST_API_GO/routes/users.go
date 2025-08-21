@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"example.com/rest-api-go/models"
+	"example.com/rest-api-go/utils"
 	"github.com/gin-gonic/gin"
 )
 func signup(context * gin.Context){
@@ -27,7 +28,12 @@ func signin(context * gin.Context){
 	err := user.ValidateCredentials(); if err != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 	}
-	context.JSON(http.StatusOK, gin.H{"message": "Signin successful"})
+	token, err := utils.GenerateToken(user.Email,user.ID); if err != nil{
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"message": "Signin successful", "token": token})
 }
 func getUsers(context *gin.Context) {
 	users, err := models.GetUsers(); if err != nil{
