@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"example.com/rest-api-go/models"
-	"example.com/rest-api-go/utils"
 	"github.com/gin-gonic/gin"
 )
 func getEvents(context *gin.Context){
@@ -14,15 +13,7 @@ func getEvents(context *gin.Context){
 	context.JSON(http.StatusOK, events)
 }
 func createEvents(context *gin.Context){
-	token := context.GetHeader("Authorization")
-	if token == "" {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token is required"})
-		return
-	}
-	userId,err := utils.VerifyToken(token); if err != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
-		return
-	}
+	
 	var event models.Event
 	if err := context.ShouldBindJSON(&event); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -33,6 +24,7 @@ func createEvents(context *gin.Context){
 		return
 	}
 	//event.ID = 1;
+	userId := context.GetInt64("userId")
 	event.UserID = userId;
 
 	context.JSON(http.StatusCreated, gin.H{"message": "Event created successfully", "event":event})
@@ -58,6 +50,11 @@ func updateEventById(context *gin.Context){
 		return
 	}
 	event, err := models.GetEventById(eventId);
+	userId := context.GetInt64("userId")
+	if userId != event.UserID{
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "you are not authorized to delete this record"})
+		return
+	}
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "Could not fetch Event"})
 		return
@@ -97,6 +94,11 @@ func deleteEventById(context *gin.Context){
 		return
 	}
 	event, err := models.GetEventById(eventId);
+	userId := context.GetInt64("userId")
+	if userId != event.UserID{
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "you are not authorized to delete this record"})
+		return
+	}
 	fmt.Println("Event:", event)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "Could not fetch Event"})
