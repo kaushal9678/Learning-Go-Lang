@@ -1,0 +1,1 @@
+DELETE http://localhost:8080/api/delete_book/3

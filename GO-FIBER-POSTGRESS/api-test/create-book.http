@@ -1,0 +1,8 @@
+POST http://localhost:8080/api/create_books
+Content-Type: application/json
+
+{
+  "author": "John Doe",
+  "title": "Go Lang Book",
+  "publisher": "Sample Publisher"
+}
