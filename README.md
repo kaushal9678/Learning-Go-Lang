@@ -4,6 +4,7 @@ This repository is dedicated to learning and showcasing Go (Golang) programming 
 
 ## Prerequisites
 - [Go](https://golang.org/dl/) 1.18 or higher installed on your system
+- A basic understanding of programming concepts
 
 ## Project Structure
 ```
@@ -36,5 +37,4 @@ go run main.go
 ## Example Usage
 - The `hello` project demonstrates a simple profit calculator.
 - The `note` project is a basic CLI for note-taking, demonstrating Go modules and package structure.
-
 Feel free to explore, modify, and learn from the code!
